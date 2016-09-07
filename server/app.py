@@ -1,7 +1,9 @@
 from flask import Flask, Response
+from flask_cors import CORS
 import records
 
 app = Flask(__name__)
+CORS(app)
 db = records.Database('postgres://localhost/trip_stats')
 
 @app.route("/")
