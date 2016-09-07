@@ -1,7 +1,9 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 
 import './App.css'
-import Map from './Map'
+import Map from './components/Map'
+import {doSomething} from './redux/actions'
 
 class App extends Component {
   render() {
@@ -10,10 +12,12 @@ class App extends Component {
         <div className="App-header">
           <h2>Trip Stats</h2>
         </div>
-        <Map markers={[]} onMapClick={ ()=> console.log("clicked")} />
+        <Map markers={[]} onMapClick={ ()=> this.props.dispatch(doSomething({foo: 'bar'}))} />
       </div>
     );
   }
 }
 
-export default App;
+export default connect((redux) => {
+  return redux
+})(App)
