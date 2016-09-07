@@ -9,16 +9,13 @@ import axios from 'axios'
 // development
 const client = axios.create({
   baseURL: 'http://localhost:5000',
-  headers: {
-    'Accept': 'application/json',
-    'Content-Type': 'application/json'
-  }
+  responseType: 'json'
 })
 
 // export create store function
 export default applyMiddleware(
-  createLogger(),
+  axiosMiddleware(client),
   thunk,
   promiseMiddleware,
-  axiosMiddleware(client)
+  createLogger()
 )(createStore)

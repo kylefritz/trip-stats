@@ -1,3 +1,9 @@
 import { createAction } from 'redux-actions'
 
-export const doSomething = createAction('SOMETHING')
+export const loadTrips = createAction('LOAD_TRIPS', (payload) => {
+  return {
+    request: {
+      url: '/'
+    }
+  }
+})
