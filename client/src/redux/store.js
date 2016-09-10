@@ -16,6 +16,6 @@ const client = axios.create({
 export default applyMiddleware(
   axiosMiddleware(client),
   thunk,
-  promiseMiddleware,
-  createLogger()
+  createLogger(),
+  promiseMiddleware
 )(createStore)
