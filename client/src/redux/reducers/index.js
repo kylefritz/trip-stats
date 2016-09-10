@@ -1,12 +1,11 @@
 import { combineReducers } from 'redux'
-import { handleActions } from 'redux-actions';
 
-const trips = handleActions({
-  LOAD_TRIPS_SUCCESS: (state, action) => {
-    return action.payload.data
-  }
-}, []);
+import trips from './trips'
+import topTrips from './top_trips'
+import roi from './roi'
 
 export default combineReducers({
-  trips
+  trips,
+  topTrips,
+  roi
 })

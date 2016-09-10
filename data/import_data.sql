@@ -8,7 +8,7 @@ CREATE TABLE raw_trips (
 );
 
 -- import 4.5MM trips!
--- need to update this lines for your own absolute path
+-- TODO: need to update this lines for your own absolute path
 COPY raw_trips (date, lat, lng, base) FROM '/Users/kylefritz/Desktop/trip-stats/data/uber-raw-data.csv' DELIMITER ',' CSV;
 
 CREATE EXTENSION postgis;
@@ -51,8 +51,8 @@ INSERT into trips (
 
 -- select pickup_at, dropoff_at, ST_AsText(trip_line) from trips limit 10;
 
-select pickup_at, dropoff_at, ST_AsText(trip_line) from trips where
-  ST_Contains(
-    ST_MakePolygon(ST_GeomFromText('LINESTRING(40.7 -73.9, 40.7 -74.1, 40.8 -74.1, 40.7 -73.9)')),
-    trips.trip_line
-  );
+-- select pickup_at, dropoff_at, ST_AsText(trip_line) from trips where
+--   ST_Contains(
+--     ST_MakePolygon(ST_GeomFromText('LINESTRING(40.7 -73.9, 40.7 -74.1, 40.8 -74.1, 40.7 -73.9)')),
+--     trips.trip_line
+--   );

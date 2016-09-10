@@ -1,26 +1,21 @@
 import React, { Component } from 'react'
-import { connect } from 'react-redux'
 
+import Map from './containers/map'
+import Stats from './containers/stats'
 import './App.css'
-import Map from './components/Map'
-import {loadTrips} from './redux/actions'
 
-class App extends Component {
-  componentWillMount(){
-    this.props.dispatch(loadTrips())
-  }
+export default class App extends Component {
   render() {
     return (
       <div className="App">
         <div className="App-header">
           <h2>Trip Stats</h2>
         </div>
-        <Map markers={[]} onMapClick={()=> ({}) } />
+        <section className="dashboard">
+          <Map />
+          <Stats />
+        </section>
       </div>
     );
   }
 }
-
-export default connect((redux) => {
-  return redux
-})(App)
