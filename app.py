@@ -38,6 +38,18 @@ def group_by_hour():
         order by 1
     """)
 
+@app.route("/")
+def index():
+    return """
+    <h1>Trip Stats API</h1>
+    <h4>Routes</h4>
+    <ul>
+        <li><a href="/group_by_location">/group_by_location</a></li>
+        <li><a href="/group_by_day">/group_by_day</a></li>
+        <li><a href="/group_by_hour">/group_by_hour</a></li>
+    </ul>
+    """
+
 def return_query(request, query):
     if request.is_json and "points" in request.get_json():
         points = request.get_json()["points"]
