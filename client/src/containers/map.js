@@ -82,12 +82,12 @@ class Map extends Component {
   }
 
   renderTopTrips(){
-    return this.props.topTrips.map((point, index) => {
+    return _.values(this.props.topTrips).map((point, index) => {
       return (
         <Marker
           key={index}
           position={point}
-          title={`${point.count} Trips`}
+          title={`${point.pickup} ${point.count} Trips`}
           />
       )
     })

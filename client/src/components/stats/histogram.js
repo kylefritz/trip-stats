@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import {BarChart} from 'react-d3-basic'
-import * as _ from 'underscore'
 
 export default class Histogram extends Component {
   render() {
@@ -12,8 +11,8 @@ export default class Histogram extends Component {
     return (
       <BarChart
         data={this.props.data}
-        width={370}
-        height={200}
+        width={450}
+        height={150}
         chartSeries={chartSeries}
         x={(row) => this.props.xFunction(row.date_part)}
         margins={{left: 40, right: 0, top: 10, bottom: 20}}

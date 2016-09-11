@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import moment from 'moment'
+import {formatNumber} from 'accounting'
 
 import TopTrips from '../components/stats/top_trips'
 import Histogram from '../components/stats/histogram'
@@ -11,7 +12,7 @@ class Stats extends Component {
     return (
       <div className="stats">
         <h1>
-          <span>{`${this.props.totalTrips} `}</span>
+          <span>{`${formatNumber(this.props.totalTrips)} `}</span>
           <span>Total Trips</span>
         </h1>
         <h3>Trips by Hour</h3>
