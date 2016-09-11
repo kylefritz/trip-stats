@@ -1,5 +1,18 @@
-import * as _ from 'underscore'
 import { createAction } from 'redux-actions'
+
+const formatApiAction = (actionName, path, roi) =>{
+  const request = {
+    request: {
+      url: path,
+      method: 'post',
+      data: {
+        points: roi
+      }
+    }
+  }
+
+  return createAction(actionName)(request)
+}
 
 export const loadTrips = () => {
     return (dispatch, getState) => {
@@ -9,17 +22,9 @@ export const loadTrips = () => {
         return
       }
 
-      const request = {
-        request: {
-          url: '/',
-          method: 'post',
-          data: {
-            points: roi
-          }
-        }
-      }
-
-      dispatch(createAction('LOAD_TRIPS')(request))
+      dispatch(formatApiAction('LOAD_TRIPS_BY_LOCATION', '/group_by_location', roi))
+      dispatch(formatApiAction('LOAD_TRIPS_BY_HOUR', '/group_by_hour', roi))
+      dispatch(formatApiAction('LOAD_TRIPS_BY_DAY', '/group_by_day', roi))
     }
 }
 

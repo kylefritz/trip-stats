@@ -7,7 +7,9 @@
   },
   "dependencies": {
     "axios": "^0.14.0",
+    "moment": "^2.14.1",
     "react": "^15.3.1",
+    "react-d3-basic": "^1.6.11",
     "react-dom": "^15.3.1",
     "react-google-maps": "^4.11.0",
     "react-redux": "^4.4.5",
