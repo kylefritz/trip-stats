@@ -9,8 +9,8 @@
 - Extra credit
   - [x] Create a heatmap showing trip density for any shape
   - [ ] Filters for time of day, or day/night
-  - [ ] A page of interesting statistics about the current shape
-  - [ ] Show popular routes
+  - [x] A page of interesting statistics about the current shape
+  - [x] Show popular routes
   - [ ] Show areas of high and low speeds
   - [ ] Any other features you think would be useful/interesting.
 

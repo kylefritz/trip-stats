@@ -94,16 +94,14 @@ class Map extends Component {
   }
 
   updateHeatmap(){
-    if(this.props.trips.length){
-      const heatMapData = this.props.trips.map(trip => ({location: new google.maps.LatLng(trip.lat, trip.lng), weight: trip.count}))
-      if(this._heatmap){
-        this._heatmap.setData(heatMapData)
-      }else{
-        this._heatmap = new google.maps.visualization.HeatmapLayer({
-          data: heatMapData,
-          map: this._map.props.map
-        })
-      }
+    const heatMapData = this.props.trips.map(trip => ({location: new google.maps.LatLng(trip.lat, trip.lng), weight: trip.count}))
+    if(this._heatmap){
+      this._heatmap.setData(heatMapData)
+    }else if(this._map){
+      this._heatmap = new google.maps.visualization.HeatmapLayer({
+        data: heatMapData,
+        map: this._map.props.map
+      })
     }
   }
 }

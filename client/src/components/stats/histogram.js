@@ -3,6 +3,10 @@ import {BarChart} from 'react-d3-basic'
 
 export default class Histogram extends Component {
   render() {
+    if(this.props.loading){
+      return <div>Loading...</div>
+    }
+    
     const chartSeries = [{
       field: 'count',
       name: 'Count'

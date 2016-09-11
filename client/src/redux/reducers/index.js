@@ -6,6 +6,7 @@ import totalTrips from './total_trips'
 import tripsByHour from './trips_by_hour'
 import tripsByDay from './trips_by_day'
 import roi from './roi'
+import loading from './loading'
 
 export default combineReducers({
   trips,
@@ -13,5 +14,6 @@ export default combineReducers({
   totalTrips,
   tripsByHour,
   tripsByDay,
-  roi
+  roi,
+  loading
 })
