@@ -6,8 +6,34 @@ app = Flask(__name__)
 CORS(app)
 db = records.Database('postgres://localhost/trip_stats')
 
-@app.route("/", methods=['GET', 'POST'])
-def trips():
+@app.route("/group_by_location", methods=['GET', 'POST'])
+def group_by_location():
+    return return_query(request, """
+        select split_part(pickup_str,',',1)::float lat, split_part(pickup_str,',',2)::float lng, count(*) count
+        FROM TABLE
+        group by pickup_str
+        order by count(*) desc
+    """)
+
+@app.route("/group_by_day", methods=['GET', 'POST'])
+def group_by_day():
+    return return_query(request, """
+        select date_part('dow', (pickup_at at time zone 'America/New_York')), count(*) count
+        FROM TABLE
+        group by 1
+        order by 1
+    """)
+
+@app.route("/group_by_hour", methods=['GET', 'POST'])
+def group_by_hour():
+    return return_query(request, """
+        select width_bucket(date_part('hour', ((pickup_at at time zone 'UTC') at time zone 'America/New_York')), 0, 24, 12) date_part, count(*) count
+        FROM TABLE
+        group by 1
+        order by 1
+    """)
+
+def return_query(request, query):
     if request.is_json and "points" in request.get_json():
         points = request.get_json()["points"]
     else:
@@ -17,18 +43,13 @@ def trips():
         points = [
             {"lat": 40.7, "lng": -74.05}, {"lat": 40.7, "lng": -74.1}, {"lat": 40.8, "lng": -74.1}, {"lat": 40.8, "lng": -74.05}]
 
-    query = """
-    with filtered_trips as (select pickup_lat, pickup_lng from trips where
+    query = query.replace("TABLE", """
+    trips where
       ST_Contains(
         ST_MakePolygon(ST_GeomFromText('%(linestring)s')),
         trips.trip_line
       )
-    )
-    select cast(pickup_lat as double precision) lat, cast(pickup_lng as double precision) lng, count(*) count
-    from filtered_trips
-    group by pickup_lat, pickup_lng
-    order by count(*) desc
-    """ % {"linestring": format_linestring(points)}
+    """ % {"linestring": format_linestring(points)})
     rows = db.query(query)
 
     if len(rows.all()) is 0:

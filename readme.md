@@ -19,6 +19,9 @@
 2. Load data into Postgres (~45 min)
 3. Create Flask app to serve rows based on geo query (~1 hour)
 4. Create React + Google Maps app to display trip data and stats (~3 hours)
+  1. make xhr to get trips grouped by lat/lng; show as "total trips" and as heatmap
+  1. for top 10 trips, make parallel calls to reverse geocode lat/lng (if same address1 combine); show in list and on map
+  1. make xhr to get trips grouped by hour of day; day of week; month show in histogram
 5. Tidy things up (~1 hour)
 
 ## Running the code
