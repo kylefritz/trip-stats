@@ -36,8 +36,13 @@
   $ cd server
   $ pip3 install -r requirements.txt
   $ python3 app.py
-  
+
 ### Client (assumes node + npm installed)
   $ cd client
   $ npm install
   $ npm start
+
+## Design decisions and tradeoffs
+
+
+## Next steps (given more time and resources)

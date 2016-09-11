@@ -1,10 +1,15 @@
 from flask import Flask, Response, request, jsonify
 from flask_cors import CORS
 import records
+import os
 
 app = Flask(__name__)
 CORS(app)
-db = records.Database('postgres://localhost/trip_stats')
+if 'DATABASE_URL' in os.environ:
+    db_url = os.environ['DATABASE_URL']
+else:
+    db_url = 'postgres://localhost/trip_stats'
+db = records.Database(db_url)
 
 @app.route("/group_by_location", methods=['GET', 'POST'])
 def group_by_location():
