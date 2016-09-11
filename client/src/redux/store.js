@@ -6,9 +6,10 @@ import promiseMiddleware from 'redux-promise'
 import axiosMiddleware from 'redux-axios-middleware'
 import axios from 'axios'
 
-// development
+const baseURL = (location.hostname === "localhost") ? 'http://localhost:5000' : 'https://trip-stats.herokuapp.com'
+
 const client = axios.create({
-  baseURL: 'http://localhost:5000',
+  baseURL,
   responseType: 'json'
 })
 
