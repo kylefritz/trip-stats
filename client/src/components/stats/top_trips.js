@@ -9,7 +9,7 @@ export default class TopTrips extends Component {
           <h3>Top Trips</h3>
           {_.sortBy(_.values(this.props.topTrips), (t)=> -t.count).map((trip, index)=>{
             return (
-              <div>
+              <div key={trip.pickup}>
                 <h4>{trip.pickup}</h4>
                 <div className="trip-details">
                   <div>{`${formatNumber(trip.count)} Trips`}</div>

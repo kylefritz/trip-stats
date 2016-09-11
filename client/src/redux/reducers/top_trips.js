@@ -2,8 +2,8 @@ import { handleActions } from 'redux-actions'
 import * as _ from 'underscore'
 
 export default handleActions({
-  RESET_TOP_TRIPS: (state, action) => {
-    return {}
+  LOAD_TRIPS_BY_LOCATION: (state, action) => {
+    return {} // clear trips until xhr returns
   },
   GEOCODE_TRIP: (state, action) => {
     let nextState = {...state}
