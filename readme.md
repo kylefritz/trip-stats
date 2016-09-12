@@ -8,10 +8,10 @@
   - [x] Be hosted on Heroku, EC2, or somewhere we can access it by visiting a URL.
 - Extra credit
   - [x] Create a heatmap showing trip density for any shape
-  - [ ] Filters for time of day, or day/night
+  - [x] Filters for time of day, or day/night
   - [x] A page of interesting statistics about the current shape
   - [x] Show popular routes
-  - [ ] Show areas of high and low speeds
+  - [x] Show areas of high and low speeds
 
 ## Approach
 1. Transform raw pickup data into pickup + drop-off data and load into Postgres (~1.5 hrs)
@@ -23,7 +23,7 @@
 5. Tidy things up (~1 hour)
 
 ## Design decisions and tradeoffs
-*Database:* The key feature of this app is to be able to filter trip data using a Region of Interest (ROI). I used a `LINESTRING` geometry to represent the pickup and drop-off lat/lngs so that I could use `ST_CONTAINS` for filtering. Several features I wanted to build required the ability to `group` pickups by location and time of day. I created a hash index to try to speed up the group by (although for large ROIs, there's still a delay).
+*Database:* The key feature of this app is to be able to filter trip data using a Region of Interest (ROI). I used a `LINESTRING` geometry to represent the pickup and drop-off lat/lngs so that I could use `ST_CONTAINS` for filtering. Several features I wanted to build required the ability to `group` pickups by location and time of day. I created a hash index to try to speed up the group by (although for large ROIs, there's still a delay). I assumed that the timestamps for trips were in UTC time and converted the to ET. I also created a btree index on hour of day to improve the performance of querying by hour range (for day vs night).
 
 *Server:* A flask app was a good fit. The app returns json that is consumed by the js client via a very liberal CORS policy.
 

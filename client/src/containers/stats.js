@@ -5,6 +5,7 @@ import {formatNumber} from 'accounting'
 
 import TopTrips from '../components/stats/top_trips'
 import Histogram from '../components/stats/histogram'
+import TimeOfDay from '../components/stats/time_of_day'
 
 class Stats extends Component {
   render() {
@@ -15,6 +16,9 @@ class Stats extends Component {
     const dow = ['Sun', 'Mon', "Tue", "Wed", "Thu", "Fri", "Sat"]
     return (
       <div className="stats">
+        <TimeOfDay
+          dispatch={this.props.dispatch}
+          timeOfDay={this.props.timeOfDay} />
         <h1>
           <span>{`${formatNumber(this.props.totalTrips)} `}</span>
           <span>Total Trips</span>
@@ -24,23 +28,20 @@ class Stats extends Component {
           loading={this.props.loading.byHour}
           data={this.props.tripsByHour}
           xLabel="Hour"
-          xFunction={(d)=> moment("1995-12-25").add(d*2,'h').format("hA") }
+          xFunction={(d)=> moment("1995-12-25").add(d.hour*2,'h').format("hA") }
           />
         <h3>Trips by Day</h3>
         <Histogram
           loading={this.props.loading.byDay}
           data={this.props.tripsByDay}
           xLabel="Day"
-          xFunction={(d)=> dow[d]}
+          xFunction={(d)=> dow[d.dow]}
           />
         <TopTrips topTrips={this.props.topTrips} />
       </div>
     )
   }
 }
-
-
-
 
 export default connect((redux) => {
   return redux

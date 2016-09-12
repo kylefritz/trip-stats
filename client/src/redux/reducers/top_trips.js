@@ -1,5 +1,4 @@
 import { handleActions } from 'redux-actions'
-import * as _ from 'underscore'
 
 export default handleActions({
   LOAD_TRIPS_BY_LOCATION: (state, action) => {

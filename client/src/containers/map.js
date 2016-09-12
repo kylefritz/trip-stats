@@ -5,6 +5,14 @@ import {GoogleMapLoader, GoogleMap, DrawingManager, Marker, Polygon} from 'react
 
 import {loadTrips, setROI} from '../redux/actions'
 
+const nightMap = [{
+  "featureType": 'all',
+  "stylers": [
+    { "invert_lightness": true },
+    { "saturation": -77 }
+  ]
+}]
+
 class Map extends Component {
   componentWillMount(){
     this.props.dispatch(loadTrips())
@@ -16,6 +24,7 @@ class Map extends Component {
     this.updateHeatmap()
   }
   render() {
+    this.updateMapStyle()
     const containerElement = (<div className="map" />)
     const children = _.compact(_.flatten(_.union(
       [this.renderDrawingManager(), this.renderRoi()],
@@ -26,7 +35,10 @@ class Map extends Component {
           containerElement={containerElement}
           googleMapElement={
             <GoogleMap
-              ref={(map) => this._map = map}
+              ref={(map) => {
+                this._map = map
+                this.updateMapStyle()
+              }}
               defaultZoom={15}
               defaultCenter={{ lat: 40.7589, lng: -73.9851 }}
               onClick={(event) => this.props.dispatch(addPoint({lat: event.latLng.lat(), lng: event.latLng.lng()}))}
@@ -52,8 +64,11 @@ class Map extends Component {
             ],
           },
           polygonOptions: {
-            clickable: true
-          },
+            fillColor: '#FF1493',
+            fillOpacity: .1,
+            strokeColor: '#FF1493',
+            strokeOpacity: 1,
+          }
         }}
         onPolygoncomplete={(polygon)=> {
           let latLngs = _.map(polygon.getPath().getArray(), (latLng) => ({lat: latLng.lat(), lng: latLng.lng()}))
@@ -77,7 +92,14 @@ class Map extends Component {
       <Polygon
         key="roi"
         path={this.props.roi}
-        onClick={handleClick} />
+        onClick={handleClick}
+        options={{
+          fillColor: '#FF1493',
+          fillOpacity: .1,
+          strokeColor: '#FF1493',
+          strokeOpacity: 1,
+        }}
+        />
     )
   }
 
@@ -102,6 +124,15 @@ class Map extends Component {
         data: heatMapData,
         map: this._map.props.map
       })
+    }
+  }
+
+  updateMapStyle(){
+    if(this._map && this._map.props.map){
+      this._map.props.map.setOptions({styles: this.props.timeOfDay.type === 'night' ? nightMap : null})
+      
+      const trafficLayer = new google.maps.TrafficLayer();
+      trafficLayer.setMap(this._map.props.map);
     }
   }
 }

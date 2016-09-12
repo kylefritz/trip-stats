@@ -13,17 +13,17 @@ db = records.Database(db_url)
 
 @app.route("/group_by_location", methods=['GET', 'POST'])
 def group_by_location():
-    return return_query(request, """
-        select split_part(pickup_str,',',1)::float lat, split_part(pickup_str,',',2)::float lng, count(*) count
+    return json_for_query(request, """
+        select ST_X(pickup) lat, ST_Y(pickup) lng, count(*) count
         FROM TABLE
-        group by pickup_str
+        group by pickup
         order by count(*) desc
     """)
 
 @app.route("/group_by_day", methods=['GET', 'POST'])
 def group_by_day():
-    return return_query(request, """
-        select date_part('dow', (pickup_at at time zone 'America/New_York')), count(*) count
+    return json_for_query(request, """
+        select pickup_dow dow, count(*) count
         FROM TABLE
         group by 1
         order by 1
@@ -31,8 +31,8 @@ def group_by_day():
 
 @app.route("/group_by_hour", methods=['GET', 'POST'])
 def group_by_hour():
-    return return_query(request, """
-        select width_bucket(date_part('hour', ((pickup_at at time zone 'UTC') at time zone 'America/New_York')), 0, 24, 12) date_part, count(*) count
+    return json_for_query(request, """
+        select width_bucket(pickup_hour, 0, 24, 12) as hour, count(*) count
         FROM TABLE
         group by 1
         order by 1
@@ -50,11 +50,15 @@ def index():
     </ul>
     """
 
-def return_query(request, query):
+def json_for_query(request, query):
     if request.is_json and "points" in request.get_json():
         points = request.get_json()["points"]
     else:
         points = []
+
+    time_query = None
+    if request.is_json and "time" in request.get_json():
+        time_query = format_time_query(request.get_json()["time"])
 
     if len(points) < 3:
         points = [
@@ -66,19 +70,34 @@ def return_query(request, query):
         ST_MakePolygon(ST_GeomFromText('%(linestring)s')),
         trips.trip_line
       )
-    """ % {"linestring": format_linestring(points)})
+      %(time_query)s
+    """ % {"linestring": format_linestring(points), "time_query": time_query or ''})
+    print(query)
     rows = db.query(query)
 
     if len(rows.all()) is 0:
         return jsonify([])
     else:
-        # key_format is not camelCase :(
         return Response(rows.export('json'), mimetype='application/json')
 
 def format_linestring(points):
     point_lines = ["%(lat)f %(lng)f" % point for point in points]
     point_lines.append(point_lines[0])
     return "LINESTRING(%(points)s)" % {"points": ", ".join(point_lines)}
+
+def format_time_query(time):
+    if time == 'all':
+        return None
+    if time == 'day':
+        return "AND %s" % time_range(6, 17)
+    if time == 'night':
+        return "AND (%s)" % " OR ".join([time_range(0,5), time_range(18,23)])
+    parts = time.split(':')
+    if len(parts) is 2:
+        return "AND %s" % time_range(int(parts[0]), int(parts[1]))
+
+def time_range(t0, tf):
+    return "pickup_hour between %(t0)s and %(tf)s" % locals()
 
 if __name__ == "__main__":
     app.run(debug = True)
